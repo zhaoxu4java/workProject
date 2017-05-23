@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<DatabaseIP>10.100.217.232</DatabaseIP>
+	<DatabasePort>3306</DatabasePort>
+	<UserName>root</UserName>
+	<Password>root</Password>
+
+	<DatabaseName>CAData</DatabaseName>
+</config>
