@@ -1,4 +1,4 @@
-package com.lenovo.bda.ca.casearchkits.entities;
+package com.lenovo.bda.ca.casearchpios.entities;
 
 public class Blog {
     private Integer id;

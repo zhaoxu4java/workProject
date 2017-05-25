@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.lenovo.bda.ca</groupId>
-	<artifactId>CASearchKits</artifactId>
+	<artifactId>CASearchPIO</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 

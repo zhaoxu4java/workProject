@@ -1,4 +1,4 @@
-package com.lenovo.bda.ca.casearchkits.utilities;
+package com.lenovo.bda.ca.casearchpios.utilities;
 
 import java.beans.PropertyVetoException;
 import java.io.File;
@@ -9,13 +9,11 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import com.lenovo.bda.ca.casearchpios.entities.*;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 
-import com.lenovo.bda.ca.casearchkits.entities.Cinema;
-import com.lenovo.bda.ca.casearchkits.entities.Film;
-import com.lenovo.bda.ca.casearchkits.entities.Schedule;
 import com.lenovo.cic.utilities.datetime.DateTimeUtils;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
@@ -309,6 +307,123 @@ public class DBUtilities {
 			
 				map.put(rs.getInt("ID"), schedule);
 			
+			}
+
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+
+				if (ps != null) {
+					ps.close();
+				}
+
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	public static HashMap<Integer,AmapCodeStreet> GetAmapPOIMap(int start, int limit) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			connection = cpds.getConnection();
+
+			String sql = "SELECT * FROM amap_code_street limit "+start+","+limit+";";
+
+			ps = connection.prepareStatement(sql);
+			rs = ps.executeQuery();
+			HashMap<Integer,AmapCodeStreet> map = new HashMap<Integer,AmapCodeStreet>();
+			while (rs.next()) {
+				AmapCodeStreet amapCodeStreet = new AmapCodeStreet();
+				amapCodeStreet.setId(rs.getInt("id"));
+				amapCodeStreet.setAmap_id(rs.getString("amap_id"));
+				amapCodeStreet.setCity_code(rs.getString("city_code"));
+				amapCodeStreet.setProvince(rs.getString("province"));
+				amapCodeStreet.setProvince_adcode("province_adcode");
+				amapCodeStreet.setCity(rs.getString("city"));
+				amapCodeStreet.setCity_adcode(rs.getString("city_adcode"));
+				amapCodeStreet.setDistrict(rs.getString("district"));
+				amapCodeStreet.setDistrict_adcode(rs.getString("district_adcode"));
+				amapCodeStreet.setStreet(rs.getString("street"));
+				amapCodeStreet.setStreet_adcode(rs.getString("street_adcode"));
+				amapCodeStreet.setStreet_center(rs.getString("street_center"));
+				map.put(rs.getInt("id"), amapCodeStreet);
+			}
+
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+
+				if (ps != null) {
+					ps.close();
+				}
+
+				if (connection != null) {
+					connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	public static HashMap<Integer,POI> GetPOIMap(int start, int limit) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			connection = cpds.getConnection();
+
+			String sql = "SELECT * FROM POI limit "+start+","+limit+";";
+
+			ps = connection.prepareStatement(sql);
+			rs = ps.executeQuery();
+			HashMap<Integer,POI> map = new HashMap<Integer,POI>();
+			while (rs.next()) {
+				POI poi = new POI();
+				poi.setId(rs.getInt("id"));
+				poi.setAdcode(rs.getString("adcode"));
+				poi.setAddress(rs.getString("address"));
+				poi.setAdname(rs.getString("adname"));
+				poi.setAlias(rs.getString("alias"));
+				poi.setCitycode(rs.getString("citycode"));
+				poi.setCityname(rs.getString("cityname"));
+				poi.setEmail(rs.getString("email"));
+				poi.setEntr_location(rs.getString("entr_location"));
+				poi.setGridcode(rs.getString("gridcode"));
+				poi.setInsertTime(rs.getDate("insertTime"));
+				poi.setLocation1(Float.parseFloat(rs.getString("location").split(",")[0]));
+				poi.setLocation2(Float.parseFloat(rs.getString("location").split(",")[0]));
+				poi.setName(rs.getString("name"));
+				poi.setNavi_poiid(rs.getString("navi_poiid"));
+				poi.setPcode(rs.getString("pcode"));
+				poi.setPhotos(rs.getString("photos"));
+				poi.setPname(rs.getString("pname"));
+				poi.setPoiid(rs.getString("poiid"));
+				poi.setPostcode(rs.getString("postcode"));
+				poi.setTag(rs.getString("tag"));
+				poi.setTel(rs.getString("tel"));
+				poi.setType(rs.getString("type"));
+				poi.setTypecode(rs.getString("typecode"));
+				poi.setWebsite(rs.getString("website"));
+				map.put(rs.getInt("id"),poi );
 			}
 
 			return map;

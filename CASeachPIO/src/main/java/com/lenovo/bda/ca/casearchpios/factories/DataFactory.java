@@ -1,10 +1,10 @@
-package com.lenovo.bda.ca.casearchkits.factories;
+package com.lenovo.bda.ca.casearchpios.factories;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.lenovo.bda.ca.casearchkits.entities.Blog;
-import com.lenovo.bda.ca.casearchkits.utilities.JsonUtils;
+import com.lenovo.bda.ca.casearchpios.entities.Blog;
+import com.lenovo.bda.ca.casearchpios.utilities.JsonUtils;
 
 public class DataFactory {
     public static DataFactory dataFactory = new DataFactory();

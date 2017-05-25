@@ -1,12 +1,10 @@
-package com.lenovo.bda.ca.casearchkits.entities;
+package com.lenovo.bda.ca.casearchpios.entities;
 
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.MatchQueryBuilder.Operator;
 
-import com.lenovo.bda.ca.casearchkits.utilities.JsonUtils;
+import com.lenovo.bda.ca.casearchpios.utilities.JsonUtils;
 
 public class Film {
 	private Integer ID;

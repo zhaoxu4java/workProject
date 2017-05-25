@@ -1,4 +1,4 @@
-package com.lenovo.bda.ca.casearchkits.factories;
+package com.lenovo.bda.ca.casearchpios.factories;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -20,8 +20,8 @@ public class ClientFactory {
     		
     		 try {
 				client = TransportClient.builder().settings(settings).build()
-							.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("192.168.3.5"), 9300));
-								//.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("10.100.217.231"), 9300));
+							//.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("192.168.3.5"), 9300));
+								.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("10.100.217.231"), 9300));
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}			

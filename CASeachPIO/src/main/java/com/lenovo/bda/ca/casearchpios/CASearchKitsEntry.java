@@ -1,4 +1,4 @@
-package com.lenovo.bda.ca.casearchkits;
+package com.lenovo.bda.ca.casearchpios;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -18,11 +18,11 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 
-import com.lenovo.bda.ca.casearchkits.entities.Cinema;
-import com.lenovo.bda.ca.casearchkits.entities.Film;
-import com.lenovo.bda.ca.casearchkits.entities.Schedule;
-import com.lenovo.bda.ca.casearchkits.factories.ClientFactory;
-import com.lenovo.bda.ca.casearchkits.utilities.DBUtilities;
+import com.lenovo.bda.ca.casearchpios.entities.Cinema;
+import com.lenovo.bda.ca.casearchpios.entities.Film;
+import com.lenovo.bda.ca.casearchpios.entities.Schedule;
+import com.lenovo.bda.ca.casearchpios.factories.ClientFactory;
+import com.lenovo.bda.ca.casearchpios.utilities.DBUtilities;
 
 /**
  * Hello world!

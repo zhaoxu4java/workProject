@@ -1,11 +1,11 @@
-package com.lenovo.bda.ca.casearchkits.utilities;
+package com.lenovo.bda.ca.casearchpios.utilities;
 
 import java.io.IOException;
 
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 
-import com.lenovo.bda.ca.casearchkits.entities.Blog;
+import com.lenovo.bda.ca.casearchpios.entities.Blog;
 
 public class JsonUtils {
 	public static void main(String[] args){
