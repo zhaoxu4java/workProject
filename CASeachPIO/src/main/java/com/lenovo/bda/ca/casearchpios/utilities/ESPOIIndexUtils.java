@@ -65,17 +65,26 @@ public class ESPOIIndexUtils {
         }
         return "[]";
     }
-    public static String byKeyWordsAndTypeCode(String typeCode,String keyword){
-		if((typeCode == null ||  typeCode.length() == 0)&&(keyword == null || keyword.length() == 0)){
-			return  "[]";
+    public static String byKeyWordsAndTypeCode(String typeCode,String keyword) {
+		if ((typeCode == null || typeCode.length() == 0) && (keyword == null || keyword.length() == 0)) {
+			return "[]";
 		}
-		if((typeCode == null ||  typeCode.length() == 0)&&(keyword != null && keyword.length() > 0)){
+		if ((typeCode == null || typeCode.length() == 0) && (keyword != null && keyword.length() > 0)) {
 			return byKeyWords(keyword);
 		}
-		if((typeCode != null &&  typeCode.length() > 0)&&(keyword == null || keyword.length() == 0)){
+		if ((typeCode != null && typeCode.length() > 0) && (keyword == null || keyword.length() == 0)) {
 			return byTypeCode(typeCode);
 		}
-		if((typeCode != null &&  typeCode.length() > 0)&&(keyword != null && keyword.length() > 0)){
+		if ((typeCode != null && typeCode.length() > 0) && (keyword != null && keyword.length() > 0)) {
+			QueryBuilder queryBuilder = QueryBuilders.boolQuery()
+																.must(QueryBuilders.matchQuery("typecode",typeCode))
+																.must(QueryBuilders.boolQuery()
+																		.should(QueryBuilders.termQuery("name",keyword))
+																		.should(QueryBuilders.termQuery("address",keyword))
+																		.should(QueryBuilders.termQuery("pname",keyword))
+																		.should(QueryBuilders.termQuery("cityname",keyword))
+																);
+		}
 		return "[]";
 	}
     /*ByKeyWords termQuery*/
