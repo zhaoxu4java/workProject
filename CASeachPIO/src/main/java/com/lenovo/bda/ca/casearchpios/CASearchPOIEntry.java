@@ -21,12 +21,12 @@ import java.util.HashMap;
  * Created by lenovo on 2017/5/24.
  */
 public class CASearchPOIEntry {
-    public static void main(String arg[]){
+    public static void main(String arg[]) {
         System.out.println(DBUtilities.GetTableRowCount("POI"));
         Client client = ClientFactory.getInstance();
-        deleteIndex(client,"ca_poi");
+        deleteIndex(client, "ca_poi");
         createInitCabotIndexs(client);
-        createPOIIndex(client,getAllPOI());
+        createPOIIndex(client, getAllPOI());
     }
 
     /*mapping配置：定义索引映射类型*/
@@ -35,16 +35,16 @@ public class CASearchPOIEntry {
             client.admin().indices().prepareCreate("ca_poi").execute().actionGet();
             new XContentFactory();
             XContentBuilder builder = XContentFactory.jsonBuilder().startObject().startObject("poi").startObject("properties")
-					.startObject("name").field("type", "string").field("store", "yes").field("analyzer", "ik").field("index", "analyzed").endObject()
-					.startObject("tag").field("type", "string").field("store", "yes").field("analyzer", "ik").field("index", "analyzed").endObject()
-					.startObject("type").field("type", "string").field("store", "yes").field("analyzer", "ik").field("index", "analyzed").endObject()
-					.startObject("typecode").field("type", "string").field("store", "yes").field("analyzer", "ik").field("index", "analyzed").endObject()
-					.startObject("address").field("type", "string").field("store", "yes").field("analyzer", "ik").field("index", "analyzed").endObject()
+                    .startObject("name").field("type", "string").field("store", "yes").field("analyzer", "ik").field("index", "analyzed").endObject()
+                    .startObject("tag").field("type", "string").field("store", "yes").field("analyzer", "ik").field("index", "analyzed").endObject()
+                    .startObject("type").field("type", "string").field("store", "yes").field("analyzer", "ik").field("index", "analyzed").endObject()
+                    .startObject("typecode").field("type", "string").field("store", "yes").field("analyzer", "ik").field("index", "analyzed").endObject()
+                    .startObject("address").field("type", "string").field("store", "yes").field("analyzer", "ik").field("index", "analyzed").endObject()
                     .startObject("location1").field("type", "double").field("store", "yes").endObject()
                     .startObject("location2").field("type", "double").field("store", "yes").endObject()
-					.startObject("tel").field("type", "string").field("store", "yes").field("analyzer", "ik").field("index", "analyzed").endObject()
-					.startObject("postcode").field("type", "string").field("store", "yes").field("analyzer", "ik").field("index", "analyzed").endObject()
-					.startObject("website").field("type", "string").field("store", "yes").field("analyzer", "ik").field("index", "analyzed").endObject()
+                    .startObject("tel").field("type", "string").field("store", "yes").field("analyzer", "ik").field("index", "analyzed").endObject()
+                    .startObject("postcode").field("type", "string").field("store", "yes").field("analyzer", "ik").field("index", "analyzed").endObject()
+                    .startObject("website").field("type", "string").field("store", "yes").field("analyzer", "ik").field("index", "analyzed").endObject()
                     .startObject("email").field("type", "string").field("store", "yes").field("analyzer", "ik").field("index", "analyzed").endObject()
                     .startObject("pname").field("type", "string").field("store", "yes").field("analyzer", "ik").field("index", "analyzed").endObject()
                     .startObject("cityname").field("type", "string").field("store", "yes").field("analyzer", "ik").field("index", "analyzed").endObject()
@@ -55,8 +55,9 @@ public class CASearchPOIEntry {
             e.printStackTrace();
         }
     }
+
     /*将poi数据全部放入map中*/
-    private static HashMap<Integer,POI> getAllPOI(){
+    private static HashMap<Integer, POI> getAllPOI() {
         Integer total = DBUtilities.GetTableRowCount("POI");
         Integer limit = 1000;
         Integer cycle = (total / limit) + 1;
@@ -73,9 +74,10 @@ public class CASearchPOIEntry {
             }
             System.out.println(i);
         }
-        System.out.println("end put:"+poiMap.size());
+        System.out.println("end put:" + poiMap.size());
         return poiMap.size() == 0 ? null : poiMap;
     }
+
     /*插入poi数据*/
     private static void createPOIIndex(Client client, HashMap<Integer, POI> poiHashMap) {
         IndexResponse response = null;
@@ -105,8 +107,9 @@ public class CASearchPOIEntry {
             System.out.println("created:" + created);
         }
     }
+
     /*删除索引*/
-    private static boolean deleteIndex(Client client, String index){
+    private static boolean deleteIndex(Client client, String index) {
         IndicesExistsRequest inExistsRequest = new IndicesExistsRequest(index);
 
         IndicesExistsResponse inExistsResponse = client.admin().indices().exists(inExistsRequest).actionGet();
@@ -115,7 +118,7 @@ public class CASearchPOIEntry {
             DeleteIndexResponse dResponse = client.admin().indices().prepareDelete(index).execute().actionGet();
             return dResponse.isAcknowledged();
 
-        }else{
+        } else {
             return false;
         }
     }

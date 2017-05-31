@@ -55,7 +55,7 @@ public class AppTest
 
     }
 
-    public void testESearchByTypeCode(){
+   /* public void testESearchByTypeCode(){
         System.out.println(ESPOIIndexUtils.byTypeCode("991000"));
     }
 
@@ -71,10 +71,13 @@ public class AppTest
         System.out.println(ESPOIIndexUtils.byKeyWordsAndTypeCode("010100","旺平东"));
     }
 
-    public void testESearchByLocation(){
-        ESPOIIndexUtils.SearchbyLocationAndType("010100",116.546600,39.950031,0d);
-    }
+
     public void testESearchByTypeCodeAndLocation(){
         //ESPOIIndexUtils.byTypeCodeAndLocation("010100",116.546600,39.950031);
+    } */
+
+
+    public void testESearchByLocation(){
+        ESPOIIndexUtils.SearchbyLocationAndType("010100",116.546600,39.950031,0d);
     }
 }
