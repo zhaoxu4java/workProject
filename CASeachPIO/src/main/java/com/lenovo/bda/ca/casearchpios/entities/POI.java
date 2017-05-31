@@ -15,8 +15,8 @@ public class POI {
     private String type;
     private String typecode;
     private String address;
-    private Float location1;
-    private Float location2;
+    private Double location1;
+    private Double location2;
     private String tel;
     private String postcode;
     private String website;
@@ -37,7 +37,7 @@ public class POI {
     public POI() {
     }
 
-    public POI(Integer id, String poiid, String name, String tag, String type, String typecode, String address, Float location1,Float location2, String tel, String postcode, String website, String email, String pcode, String pname, String citycode, String cityname, String adcode, String adname, String gridcode, String navi_poiid, String entr_location, String alias, String photos, Date insertTime) {
+    public POI(Integer id, String poiid, String name, String tag, String type, String typecode, String address, Double location1,Double location2, String tel, String postcode, String website, String email, String pcode, String pname, String citycode, String cityname, String adcode, String adname, String gridcode, String navi_poiid, String entr_location, String alias, String photos, Date insertTime) {
 
         this.id = id;
         this.poiid = poiid;
@@ -122,18 +122,18 @@ public class POI {
         this.address = address;
     }
 
-    public Float getLocation1() {
+    public Double getLocation1() {
         return location1;
     }
 
-    public void setLocation1(Float location1) {
+    public void setLocation1(Double location1) {
         this.location1 = location1;
     }
-    public Float getLocation2() {
+    public Double getLocation2() {
         return location2;
     }
 
-    public void setLocation2(Float location2) {
+    public void setLocation2(Double location2) {
         this.location2 = location2;
     }
 

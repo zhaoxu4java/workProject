@@ -1,6 +1,10 @@
 package com.lenovo.bda.ca.casearchpios.utilities;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import net.sf.json.util.JSONUtils;
 import org.apache.lucene.queryparser.surround.parser.ParseException;
+import org.apache.lucene.search.Query;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
@@ -38,8 +42,133 @@ public class ESPOIIndexUtils {
     	}
     	
 	}
-	
-	public static String QueryCinemaList(String cinemaIds,String keywords){
+    public static String byLocationPoint(String typeCode,Double location1,Double location2,Double distance){
+        if (typeCode !=null && typeCode.length() > 0 && location1 != null && location2 != null && distance != null ){
+            Map<String,String> sortMap = new LinkedHashMap<String, String>();
+            String jsonString = byTypeCode(typeCode);
+            if (!jsonString.equals("[]")){
+				JSONArray jsonArray = JSONArray.fromObject(jsonString);
+				Map<Double,JSONObject> jsonObjectMap = new HashMap<Double, JSONObject>();
+
+				for (Object obj :jsonArray
+					 ) {
+					JSONObject jsonObject = JSONObject.fromObject(obj);
+					Double checkLocation1 = (Double) jsonObject.get("location1");
+					Double checkLocation2 = (Double) jsonObject.get("location2");
+					double distancePoor = distance - PointCheckUtils.Distance(location1, location2, checkLocation1, checkLocation2);
+					if (distancePoor>=0){
+						jsonObjectMap.put(distancePoor,jsonObject);
+					}
+				}
+
+			}
+        }
+        return "[]";
+    }
+    public static String byKeyWordsAndTypeCode(String typeCode,String keyword){
+		if((typeCode == null ||  typeCode.length() == 0)&&(keyword == null || keyword.length() == 0)){
+			return  "[]";
+		}
+		if((typeCode == null ||  typeCode.length() == 0)&&(keyword != null && keyword.length() > 0)){
+			return byKeyWords(keyword);
+		}
+		if((typeCode != null &&  typeCode.length() > 0)&&(keyword == null || keyword.length() == 0)){
+			return byTypeCode(typeCode);
+		}
+		if((typeCode != null &&  typeCode.length() > 0)&&(keyword != null && keyword.length() > 0)){
+		return "[]";
+	}
+    /*ByKeyWords termQuery*/
+    public static String byKeyWordsWithTerm(String keyWord){
+        if(keyWord == null || keyWord.length() == 0){
+            return "[]";
+        }
+        Map<String,String> sortMap = new LinkedHashMap<String, String>();
+        // Map<String,String> keyStringMap = new HashMap<String, String>();
+        QueryBuilder queryBuilder = QueryBuilders.boolQuery()
+                .should(QueryBuilders.termQuery("name",keyWord))
+                .should(QueryBuilders.termQuery("address",keyWord))
+                .should(QueryBuilders.termQuery("pname",keyWord))
+                .should(QueryBuilders.termQuery("cityname",keyWord));
+        SearchResponse searchResponse = client.prepareSearch(ES_INDEX_NAME)
+                .setTypes("poi")
+                .setQuery(queryBuilder).execute().actionGet();
+        SearchHits hits = searchResponse.getHits();
+        String jsonResult="";
+        jsonResult = getJsonStringFromHit(sortMap, hits, jsonResult);
+        sortMap.clear();
+        sortMap = null;
+        System.out.println(jsonResult);
+        return jsonResult;
+    }
+
+    /*ByKeyWords*/
+    public static String byKeyWords(String keyWord){
+        if(keyWord == null || keyWord.length() == 0){
+            return "[]";
+        }
+        Map<String,String> sortMap = new LinkedHashMap<String, String>();
+       // Map<String,String> keyStringMap = new HashMap<String, String>();
+        QueryBuilder queryBuilder = QueryBuilders.boolQuery()
+                                                            .should(QueryBuilders.matchQuery("name",keyWord))
+                                                            .should(QueryBuilders.matchQuery("address",keyWord))
+                                                            .should(QueryBuilders.matchQuery("pname",keyWord))
+                                                            .should(QueryBuilders.matchQuery("cityname",keyWord));
+        SearchResponse searchResponse = client.prepareSearch(ES_INDEX_NAME)
+                .setTypes("poi")
+                .setQuery(queryBuilder).execute().actionGet();
+        SearchHits hits = searchResponse.getHits();
+        String jsonResult="";
+        jsonResult = getJsonStringFromHit(sortMap, hits, jsonResult);
+        sortMap.clear();
+        sortMap = null;
+        System.out.println(jsonResult);
+        return jsonResult;
+    }
+
+    /*ByTypeCode*/
+	public static String byTypeCode(String typeCode){
+        if (typeCode == null || typeCode.length() == 0){
+            return "[]";
+        }
+        QueryBuilder queryBuilder = null;
+        Map<String,String> sortMap = new LinkedHashMap<String, String>();
+        queryBuilder = QueryBuilders.matchQuery("typecode",typeCode);
+        SearchResponse searchResponse = client.prepareSearch(ES_INDEX_NAME)
+                                                                                    .setTypes("poi")
+                                                                                    .setQuery(queryBuilder).execute().actionGet();
+        SearchHits hits = searchResponse.getHits();
+        String jsonResult="";
+        jsonResult = getJsonStringFromHit(sortMap, hits, jsonResult);
+
+        sortMap.clear();
+        sortMap = null;
+        System.out.println(jsonResult);
+        return jsonResult;
+	}
+
+    private static String getJsonStringFromHit(Map<String, String> sortMap, SearchHits hits, String jsonResult) {
+        if (hits.totalHits()>0){
+            for (SearchHit hit:hits
+                 ) {
+                sortMap.put(hit.getId(),hit.getSourceAsString());
+            }
+            jsonResult+="[";
+            for(String json:sortMap.values()){
+                jsonResult+=json+",";
+            }
+            if(jsonResult.endsWith(",")){
+                jsonResult = jsonResult.substring(0, jsonResult.length()-1);
+            }
+            jsonResult+="]";
+        } else {
+            jsonResult="[]";
+            System.out.println("搜到0条结果");
+        }
+        return jsonResult;
+    }
+
+    public static String QueryCinemaList(String cinemaIds,String keywords){
 		if((cinemaIds==null || cinemaIds.length() ==0) && (keywords == null || keywords.length() == 0)){
 			return "[]";
 		}
@@ -101,27 +230,9 @@ public class ESPOIIndexUtils {
 
 		SearchHits hits = searchresponse.getHits();// 获取返回值
 		String jsonResult="";
-		if (hits.totalHits() > 0) {
-			for (SearchHit hit : hits) {
-//				System.out.println("score:" + hit.getScore() + ":\t" + hit.getId());// .get("title").getSource()
-//				System.out.println("content:" + hit.getSourceAsString());
-				sortMap.put(hit.getId(), hit.getSourceAsString());
-			}
-			
-			jsonResult+="[";
-			for(String json:sortMap.values()){
-				jsonResult+=json+",";
-			}
-			if(jsonResult.endsWith(",")){
-				jsonResult = jsonResult.substring(0, jsonResult.length()-1);
-			}
-			jsonResult+="]";
-		} else {
-			jsonResult="[]";
-			System.out.println("搜到0条结果");
-		}
-		
-		sortMap.clear();
+        jsonResult = getJsonStringFromHit(sortMap, hits, jsonResult);
+
+        sortMap.clear();
 		sortMap = null;
 		System.out.println(jsonResult);
 		return jsonResult;
@@ -264,27 +375,9 @@ public class ESPOIIndexUtils {
 
 		SearchHits hits = searchresponse.getHits();// 获取返回值
 		String jsonResult="";
-		if (hits.totalHits() > 0) {
-			for (SearchHit hit : hits) {
-				/*System.out.println("score:" + hit.getScore() + ":\t" + hit.getId());// .get("title").getSource()
-				System.out.println("content:" + hit.getSourceAsString());*/
-				sortMap.put(hit.getId(), hit.getSourceAsString());
-			}
-			
-			jsonResult+="[";
-			for(String json:sortMap.values()){
-				jsonResult+=json+",";
-			}
-			if(jsonResult.endsWith(",")){
-				jsonResult = jsonResult.substring(0, jsonResult.length()-1);
-			}
-			jsonResult+="]";
-		} else {
-			jsonResult="[]";
-			System.out.println("搜到0条结果");
-		}
-		
-		sortMap.clear();
+        jsonResult = getJsonStringFromHit(sortMap, hits, jsonResult);
+
+        sortMap.clear();
 		sortMap = null;
 		System.out.println(jsonResult);
 		return jsonResult;

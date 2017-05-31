@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -408,9 +409,9 @@ public class DBUtilities {
 				poi.setEmail(rs.getString("email"));
 				poi.setEntr_location(rs.getString("entr_location"));
 				poi.setGridcode(rs.getString("gridcode"));
-				poi.setInsertTime(rs.getDate("insertTime"));
-				poi.setLocation1(Float.parseFloat(rs.getString("location").split(",")[0]));
-				poi.setLocation2(Float.parseFloat(rs.getString("location").split(",")[0]));
+				//poi.setInsertTime(new Date(rs.getDate("insertTime").getTime()));
+				poi.setLocation1(Double.parseDouble(rs.getString("location").split(",")[0]));
+				poi.setLocation2(Double.parseDouble(rs.getString("location").split(",")[0]));
 				poi.setName(rs.getString("name"));
 				poi.setNavi_poiid(rs.getString("navi_poiid"));
 				poi.setPcode(rs.getString("pcode"));
