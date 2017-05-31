@@ -411,7 +411,7 @@ public class DBUtilities {
 				poi.setGridcode(rs.getString("gridcode"));
 				//poi.setInsertTime(new Date(rs.getDate("insertTime").getTime()));
 				poi.setLocation1(Double.parseDouble(rs.getString("location").split(",")[0]));
-				poi.setLocation2(Double.parseDouble(rs.getString("location").split(",")[0]));
+				poi.setLocation2(Double.parseDouble(rs.getString("location").split(",")[1]));
 				poi.setName(rs.getString("name"));
 				poi.setNavi_poiid(rs.getString("navi_poiid"));
 				poi.setPcode(rs.getString("pcode"));

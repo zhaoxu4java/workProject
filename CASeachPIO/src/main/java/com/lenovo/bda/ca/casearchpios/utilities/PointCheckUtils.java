@@ -106,6 +106,16 @@ public class PointCheckUtils {
         return d;
     }
 
+    public static double distancePoor(double long1,double lat1,double distance,String type){
+        double n;
+        if (type.equals("long")){
+
+        }
+        if (type.equals("lat")){
+
+        }
+        return 0d;
+    }
 
     // 测试一个点是否在多边形内
     public static void main(String[] args) {

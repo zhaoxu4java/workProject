@@ -72,6 +72,9 @@ public class AppTest
     }
 
     public void testESearchByLocation(){
-        ESPOIIndexUtils.byLocationPoint("010100",116.546600,39.950031,0d);
+        ESPOIIndexUtils.SearchbyLocationAndType("010100",116.546600,39.950031,0d);
+    }
+    public void testESearchByTypeCodeAndLocation(){
+        //ESPOIIndexUtils.byTypeCodeAndLocation("010100",116.546600,39.950031);
     }
 }
