@@ -78,6 +78,10 @@ public class AppTest
 
 
     public void testESearchByLocation(){
-        ESPOIIndexUtils.SearchbyLocationAndType("010100",116.546600,39.950031,0d);
+        ESPOIIndexUtils.searchbyLocationAndType("010100",116.546600,39.950031,0d);
+    }
+
+    public void testSin(){
+        System.out.println(Math.sin(Math.PI /6));
     }
 }

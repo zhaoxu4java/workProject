@@ -107,12 +107,15 @@ public class PointCheckUtils {
     }
 
     public static double distancePoor(double long1,double lat1,double distance,String type){
-        double n;
+        double n,R;
+        R = 6378137;
         if (type.equals("long")){
-
+            n = 180.0 * distance / (Math.PI  * R * Math.cos(Math.PI *long1/180.0));
+            return  n;
         }
         if (type.equals("lat")){
-
+            n = 180.0 * distance / (Math.PI  * R);
+            return n;
         }
         return 0d;
     }

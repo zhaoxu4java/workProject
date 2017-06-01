@@ -49,9 +49,8 @@ public class ESPOIIndexUtils {
     * location2 中心点纬度
     * distance 搜索半径
     * */
-    public static String SearchbyLocationAndType(String typeCode, Double location1, Double location2, Double distance) {
+    public static String searchbyLocationAndType(String typeCode, Double location1, Double location2, Double distance) {
         if (typeCode != null && typeCode.length() > 0 && location1 != null && location2 != null && distance != null) {
-            Map<String, String> sortMap = new LinkedHashMap<String, String>();
             double aLong = PointCheckUtils.distancePoor(location1, location2, distance, "long");
             double lat = PointCheckUtils.distancePoor(location1, location2, distance, "lat");
             String jsonString = byTypeCodeAndLocation(typeCode, location1 - aLong, location1 + aLong, location2 - lat, location2 + lat);
@@ -61,6 +60,34 @@ public class ESPOIIndexUtils {
         return "[]";
     }
 
+    /*
+    * 根据typecode 和 location 以及keyword查询
+    * keyword 关键字
+    * */
+    public static String searchBykeyAndTypeCode(String typeCode,String keyword,Double location1,Double location2,Double distance){
+        if (typeCode != null && typeCode.length() > 0 && location1 != null && location2 != null && distance != null && keyword != null && keyword.length() > 0) {
+            double aLong = PointCheckUtils.distancePoor(location1, location2, distance, "long");
+            double lat = PointCheckUtils.distancePoor(location1, location2, distance, "lat");
+            String jsonString = byKeyWordsAndTypeCode(typeCode,keyword,location1-aLong,location1+aLong,location2-lat,location2+lat);
+            String jsonSortString = sortByDistance(location1, location2, distance, jsonString);
+            if (jsonSortString != null) return jsonSortString;
+        }
+        return "[]";
+    }
+
+    /*
+    * 根据keyword 和 location 查询
+    * */
+    public static String searchByKeyAndLocation(String keyword,Double location1,Double location2,Double distance){
+        if ( location1 != null && location2 != null && distance != null && keyword != null && keyword.length() > 0){
+            double aLong = PointCheckUtils.distancePoor(location1, location2, distance, "long");
+            double lat = PointCheckUtils.distancePoor(location1, location2, distance, "lat");
+            String jsonString = byKeyWordsAndLocation(keyword,location1-aLong,location1+aLong,location2-lat,location2+lat);
+            String jsonSortString = sortByDistance(location1, location2, distance, jsonString);
+            if (jsonSortString != null) return jsonSortString;
+        }
+        return "[]";
+    }
 
     public static String byKeyWordsAndTypeCode(String typeCode, String keyword, Double location1min, Double location1max,
                                                Double location2min, Double location2max) {
@@ -81,46 +108,24 @@ public class ESPOIIndexUtils {
     }
 
 
-    /*ByKeyWords termQuery*/
-    public static String byKeyWordsWithTerm(String keyWord) {
+    public static String byKeyWordsAndLocation(String keyWord,Double location1min, Double location1max, Double location2min, Double location2max) {
         if (keyWord == null || keyWord.length() == 0) {
             return "[]";
         }
-        Map<String, String> sortMap = new LinkedHashMap<String, String>();
-        // Map<String,String> keyStringMap = new HashMap<String, String>();
+        Map<String, String> sortMap = new LinkedHashMap<>();
+
         QueryBuilder queryBuilder = QueryBuilders.boolQuery()
-                .should(QueryBuilders.termQuery("name", keyWord))
-                .should(QueryBuilders.termQuery("address", keyWord))
-                .should(QueryBuilders.termQuery("pname", keyWord))
-                .should(QueryBuilders.termQuery("cityname", keyWord));
+                .must(QueryBuilders.rangeQuery("location1").gte(location1min).lte(location1max))
+                .must(QueryBuilders.rangeQuery("location2").gte(location2min).lte(location2max))
+                .must(QueryBuilders.boolQuery()
+                        .should(QueryBuilders.matchQuery("name", keyWord))
+                        .should(QueryBuilders.matchQuery("address", keyWord))
+                        .should(QueryBuilders.matchQuery("pname", keyWord))
+                        .should(QueryBuilders.matchQuery("cityname", keyWord))
+                );
         return searchResponseString(sortMap, queryBuilder);
     }
 
-    /*ByKeyWords*/
-    public static String byKeyWords(String keyWord) {
-        if (keyWord == null || keyWord.length() == 0) {
-            return "[]";
-        }
-        Map<String, String> sortMap = new LinkedHashMap<String, String>();
-        // Map<String,String> keyStringMap = new HashMap<String, String>();
-        QueryBuilder queryBuilder = QueryBuilders.boolQuery()
-                .should(QueryBuilders.matchQuery("name", keyWord))
-                .should(QueryBuilders.matchQuery("address", keyWord))
-                .should(QueryBuilders.matchQuery("pname", keyWord))
-                .should(QueryBuilders.matchQuery("cityname", keyWord));
-        return searchResponseString(sortMap, queryBuilder);
-    }
-
-    /*ByTypeCode*/
-    public static String byTypeCode(String typeCode) {
-        if (typeCode == null || typeCode.length() == 0) {
-            return "[]";
-        }
-        QueryBuilder queryBuilder = null;
-        Map<String, String> sortMap = new LinkedHashMap<String, String>();
-        queryBuilder = QueryBuilders.matchQuery("typecode", typeCode);
-        return searchResponseString(sortMap, queryBuilder);
-    }
 
     public static String byTypeCodeAndLocation(
             String typeCode, Double location1min, Double location1max, Double location2min, Double location2max) {
