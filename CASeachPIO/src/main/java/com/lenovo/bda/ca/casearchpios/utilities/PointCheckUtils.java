@@ -1,6 +1,7 @@
 package com.lenovo.bda.ca.casearchpios.utilities;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -108,9 +109,9 @@ public class PointCheckUtils {
 
     public static double distancePoor(double long1,double lat1,double distance,String type){
         double n,R;
-        R = 6378137;
+        R = 6378137;  //以米为单位
         if (type.equals("long")){
-            n = 180.0 * distance / (Math.PI  * R * Math.cos(Math.PI *long1/180.0));
+            n = 180.0 * distance / (Math.PI  * R * Math.cos(Math.PI *lat1/180.0));
             return  n;
         }
         if (type.equals("lat")){
@@ -118,6 +119,16 @@ public class PointCheckUtils {
             return n;
         }
         return 0d;
+    }
+
+    public static List<Point2D.Double> sortLocation(List<Point2D.Double> doubleList,String type){
+        if (type.equals("lang")) {
+            Collections.sort(doubleList, (x, y) -> Double.compare(x.getX(), y.getX()));
+        }
+        if (type.equals("lat")){
+            Collections.sort(doubleList,(x,y) -> Double.compare(x.getY(),y.getY()));
+        }
+        return doubleList;
     }
 
     // 测试一个点是否在多边形内
