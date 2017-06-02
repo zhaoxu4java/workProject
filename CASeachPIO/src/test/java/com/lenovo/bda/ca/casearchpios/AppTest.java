@@ -75,7 +75,28 @@ public class AppTest
     public void testESearchByTypeCodeAndLocation(){
         //ESPOIIndexUtils.byTypeCodeAndLocation("010100",116.546600,39.950031);
     } */
+    public void testString(){
+        String s1 = "hello";
+        String s = "hello";
+        System.out.println(s == s1);
+        String s2 = "he" + new String("llo");
+        System.out.println(s1 == s2);
+    }
 
+    public void testRun() throws Exception{
+        Thread t = new Thread(){
+            public void run(){
+                pong();
+            }
+        };
+        t.start();
+        Thread.sleep(10);
+        System.out.print("ping");
+    }
+
+    static void pong(){
+        System.out.println("pong");
+    }
 
     public void testESearchByLocation(){
         System.out.println(ESPOIIndexUtils.searchbyLocationAndType("010100",116.546600,39.950031,5000d));
@@ -94,8 +115,13 @@ public class AppTest
         doubles.add(new Point2D.Double(116.546600,39.950031));
         doubles.add(new Point2D.Double(116.546600,38.950031));
         doubles.add(new Point2D.Double(116.646600,38.950031));
-        //System.out.println(ESPOIIndexUtils.searchBylocationsAndkeyAndtype(doubles,"旺平东","010100"));
+        long init = new Date().getTime();
         System.out.println(ESPOIIndexUtils.searchByLocationsAndKeyword(doubles,"加油站"));
+        long begin = new Date().getTime();
+        System.out.println(begin - init);
+        System.out.println(ESPOIIndexUtils.searchBylocationsAndkeyAndtype(doubles,"旺平东","010100"));
+        long end = new Date().getTime();
+        System.out.println(end-begin);
         //System.out.println(ESPOIIndexUtils.searchByLocationsAndType(doubles,"010100"));
     }
     public void testSin(){
